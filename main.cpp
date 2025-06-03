@@ -1,12 +1,13 @@
 #include <iostream>
-#include "TableDeck.hpp"
+#include "Table.hpp"
 using namespace std;
 
 int main() {
 
-  TableDeck test;
-  test.shuffleDeck();
-  test.printDeck();
+  // initialize the table 
+  Table table;
+
+
 
   return 0;
 }
