@@ -1,6 +1,9 @@
 #include "Card.hpp"
 #include <iostream>
 
+// unused file
+// this was my implementation of a linked list for a players hand (before finding out about vectors)
+// decided to use vectors instead
 class CardList {
 
   class ListNode {
