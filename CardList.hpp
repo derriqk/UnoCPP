@@ -4,6 +4,7 @@
 // unused file
 // this was my implementation of a linked list for a players hand (before finding out about vectors)
 // decided to use vectors instead
+// will keep this file anyways
 class CardList {
 
   class ListNode {
