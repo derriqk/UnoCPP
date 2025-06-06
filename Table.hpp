@@ -178,24 +178,6 @@ class Table {
       return result;
     }
 
-    void drawNum(int num) {
-      for (int i = 0; i < num; i++) {
-        players[currPlayer].hand.push_back(game.deck.back());
-        game.deck.pop_back();
-
-        // only reveal drawn cards to players
-        if (players[currPlayer].role == "user") { // print the card they drew
-          cout << "Card drawn: ";
-          players[currPlayer].hand.back().printCard();
-          cout << endl;
-          std::this_thread::sleep_for(700ms);
-        } else {
-          cout << "Player " << currPlayer + 1 << " has drawn a card" << endl;
-          std::this_thread::sleep_for(700ms);
-        }
-      }
-    }
-
     // check if a bot has a valid hand to use
     void botPlay(Player& player) {
       int i = 0;
