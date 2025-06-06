@@ -8,8 +8,6 @@ class Card {
   public:
     string color; // color is red/blue/yellow/green otherwiese it is 'wild'
     string types[5] = {"Skip", "Reverse", "Draw 2", "Draw 4", "Regular"};
-    string chosenColor = "blank";
-
     
     int value; // to make it faster, special types like +4, +2, reverse, block will recieve special int values instead of separate types
 

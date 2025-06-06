@@ -23,6 +23,7 @@ int main() {
   cin >> option;
 
   while (playing) {
+    bool playUNO = true;
 
     // if user quits the game
     if (option.compare("Quit") == 0) {
@@ -76,7 +77,8 @@ int main() {
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         cin >> cardcount;
       }
-
+      // testing
+      // while (cardcount < 2 || cardcount > 12) {
       while (cardcount < 7 || cardcount > 12) {
         cout << "Card count invalid, please retype: " << endl; 
         cin.clear();
@@ -101,7 +103,7 @@ int main() {
       cout << "Game will now begin... " << endl;
       std::this_thread::sleep_for(500ms);
 
-      while (playing) {
+      while (playUNO) {
         if (game.deckEmpty()) {
           cout << "The deck is empty, taking discard pile and putting into deck pile..." << endl;
           cout << "Please wait..." << endl;
@@ -121,7 +123,7 @@ int main() {
           cout << endl << "The card on the discard pile is: ";
           game.viewDiscard();
           cout << endl;
-
+          cout << "Player 1 has " << game.players[0].hand.size() << " cards" << endl;
           cout << "Your hand is:" << endl;
           game.players[0].printHand();
 
@@ -139,12 +141,24 @@ int main() {
               cin >> cardnum;
             }
 
-            while (cardnum < 0 || cardnum > game.players[0].hand.size()) {
+            // testing:
+            // while (cardnum != 55) { 
+            while (cardnum < 0 || cardnum > game.players[0].hand.size() ) {
               cout << "Please enter a valid card number:" << endl; 
               cin.clear();
               cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
               cin >> cardnum;
             }
+
+            // if (cardnum == 55) {
+            //   game.players[0].hand.clear();
+
+            //   if (game.winner(game.players[0])) {
+            //     cout << "Player 1 WINS the game! " << endl;
+            //     playUNO = false;
+            //     validCard = false;
+            //   }
+            // } else
 
             if (cardnum == 0) { // draw until valid
               bool cont = true;
@@ -155,15 +169,30 @@ int main() {
               cout << endl;
 
               if (game.playCard(game.players[0].hand.back(), game.players[0].hand.size()-1)) {
+
+                if (game.winner(game.players[0])) {
+                  cout << "Player 1 WINS the game! " << endl;
+                  playUNO = false;
+                  validCard = false;
+                }
+                
                 cout << "Next Player's turn..." << endl; 
                 std::this_thread::sleep_for(500ms);
                 validCard = false;
               }
+
+              
             } 
             else { // play that card
               cout << "You decide to play: ";
               game.players[0].hand[cardnum - 1].printCard(); 
               cout << endl;
+
+              if (game.winner(game.players[0])) {
+                cout << "Player 1 WINS the game! " << endl;
+                playUNO = false;
+                validCard = false;
+              }
 
               if (game.playCard(game.players[0].hand[cardnum-1], cardnum-1)) {
                 cout << "Next Player's turn..." << endl; 
@@ -179,32 +208,40 @@ int main() {
               }
             }
           }
+          
+          // cout << "Clearing deck for test purposes" << endl;
+          // game.game.deck.clear();
         } 
         else { // the 'bot' will play otherwise
            cout << "It is Player " << game.currPlayer%game.playercount + 1 << "'s turn..." << endl;
-           std::this_thread::sleep_for(53200ms); // block
+           cout << "Player " << game.currPlayer%game.playercount + 1 << " has " << game.players[game.currPlayer%game.playercount].hand.size() << " cards" << endl;
 
             // state discard pile card
             std::this_thread::sleep_for(500ms);
             cout << endl << "The card on the discard pile is: ";
             game.viewDiscard();
             cout << endl;
-
+            
             cout << "Player " << game.currPlayer%game.playercount + 1<< " is deciding their move..." << endl;
             std::this_thread::sleep_for(1500ms);
-            game.botPlay(game.players[game.currPlayer%game.playercount]);
+            game.botPlay(game.players[game.currPlayer%game.playercount], playUNO);
         }
       }
-      
-
-      
-
-      std::this_thread::sleep_for(12000ms);
     }
 
     // restate the game options
     else {
       cout << "Please type in your selected option exactly in the terminal:" << endl;
+      cin.clear();
+      cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      cin >> option;
+    }
+    
+    if (!playUNO) { // game ended
+      std::this_thread::sleep_for(1000ms);
+      cout << "Please type in your selected option exactly in the terminal:" << endl;
+      cout << "Here are your options:" << endl;
+      cout << "Play" << endl << "Quit" << endl;
       cin.clear();
       cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       cin >> option;
