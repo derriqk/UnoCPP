@@ -6,8 +6,8 @@
 class Table {
   public: 
     TableDeck game;
-    int currPlayer = 0; // atm first player will always be player 1
-    string direction = "right";
+    int currPlayer; // atm first player will always be player 1
+    bool direction = true; // true means right, false means left
 
     Player* players; // 3 players
     int playercount;
@@ -16,9 +16,12 @@ class Table {
     Table(int size, int cardcount) {
       shuffleDeck();
       this->players = new Player[size];
-      players[0].role = "user"; // assign user to first player
+      
       this->playercount = size;
       this->cardcount = cardcount;
+
+      players[0].role = "user"; // assign user to first player
+      currPlayer = 100*size;
 
       // game.printDeck(); debugging
       Card test("Red", 5);
@@ -148,7 +151,7 @@ class Table {
         compare = game.discardPile.back().color;
       }
 
-      if (card.value == game.discardPile.back().value || card.color == compare) {
+      if (card.value == game.discardPile.back().value || card.color == compare || card.value > 12) { // wild cards can always be used
         result = true;
 
         int playedValue = card.value; // save the value of the played card;
@@ -162,14 +165,35 @@ class Table {
         // add removed card to discard pile
         game.discardPile.push_back(card);
         // overrride the chosen card then remove it
-        players[currPlayer].hand[location] = players[currPlayer].hand.back();
-        players[currPlayer].hand.pop_back();
+        players[currPlayer%playercount].hand[location] = players[currPlayer%playercount].hand.back();
+        players[currPlayer%playercount].hand.pop_back();
+
+        // checks for special cards
+        if (playedValue == 10) { // skip card
+          cout << "Player " << (currPlayer%playercount) + 1 << " has skipped the next player" << endl;
+          if (direction) { // direction is right so increment instead
+            currPlayer ++; 
+          } else { // directon is left so decrement instead
+            currPlayer --; 
+          }
+          std::this_thread::sleep_for(500ms);
+        }
+        else if (playedValue == 11) { // reverse card
+          cout << "Player " << (currPlayer%playercount) + 1 << " has reversed the turn order" << endl;
+          std::this_thread::sleep_for(500ms);
+          direction = !direction; // reverse the direction
+        }
+        else if (playedValue == 12) { // draw 2 and skip (no stacking made just yet)
+
+        }
 
         // since player turn succeeded, increment/decrement currPlayer
         
-       currPlayer++;
-
-        currPlayer = ( (currPlayer % playercount) + playercount ) % playercount;
+        if (direction) { // direction is right so increment instead
+          currPlayer ++; 
+        } else { // directon is left so decrement instead
+          currPlayer --; 
+        }
 
         // after: (debug)
         // players[0].printHand();

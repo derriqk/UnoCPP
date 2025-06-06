@@ -182,6 +182,7 @@ int main() {
         } 
         else { // the 'bot' will play otherwise
            cout << "It is Player " << game.currPlayer%game.playercount + 1 << "'s turn..." << endl;
+           std::this_thread::sleep_for(53200ms); // block
 
             // state discard pile card
             std::this_thread::sleep_for(500ms);
